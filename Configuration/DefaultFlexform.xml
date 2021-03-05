@@ -1,0 +1,76 @@
+<T3FlexForms>
+    <data>
+        <sheet index="main">
+            <language index="lDEF">
+                <field index="switchableControllerActions">
+                    <value index="vDEF">Calendar-&gt;list;Calendar-&gt;detail</value>
+                </field>
+                <field index="settings.pluginConfiguration">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.useRelativeDate">
+                    <value index="vDEF">1</value>
+                </field>
+                <field index="settings.overrideStartRelative">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.overrideEndRelative">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.limit">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.hidePagination">
+                    <value index="vDEF">0</value>
+                </field>
+            </language>
+        </sheet>
+        <sheet index="general">
+            <language index="lDEF">
+                <field index="settings.configuration">
+                    <value index="vDEF">Event</value>
+                </field>
+                <field index="settings.sortBy">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.sorting">
+                    <value index="vDEF">ASC</value>
+                </field>
+                <field index="persistence.storagePid">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="persistence.recursive">
+                    <value index="vDEF"></value>
+                </field>
+            </language>
+        </sheet>
+        <sheet index="pages">
+            <language index="lDEF">
+                <field index="settings.detailPid">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.listPid">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.yearPid">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.quarterPid">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.monthPid">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.weekPid">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.dayPid">
+                    <value index="vDEF"></value>
+                </field>
+                <field index="settings.bookingPid">
+                    <value index="vDEF"></value>
+                </field>
+            </language>
+        </sheet>
+    </data>
+</T3FlexForms>

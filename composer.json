@@ -1,0 +1,27 @@
+{
+  "name": "sypets/cal2calendarize",
+  "description": "Migrate cal database records to calendarize",
+  "type": "typo3-cms-extension",
+  "license": [
+    "GPL-2.0-or-later"
+  ],
+  "authors": [
+    {
+      "name": "Sybille Peters",
+      "email": "sypets@gmx.de"
+    }
+  ],
+  "require": {
+    "typo3/cms-core": "^10.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sypets\\Cal2calendarize\\": "Classes"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Sypets\\Cal2calendarize\\Tests\\": "Tests"
+    }
+  }
+}
