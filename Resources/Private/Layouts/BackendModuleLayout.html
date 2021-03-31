@@ -1,0 +1,20 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+    <be:moduleLayout>
+        <f:be.pageRenderer
+                includeCssFiles="{0:'{f:uri.resource(path:\'Css/cal2calendarize.css\')}'}"
+        />
+        <be:moduleLayout.menu identifier="Cal2CalendarizeModuleMenu">
+            <be:moduleLayout.menuItem label="Personen-Plugins mit Problemen (Liste)"
+                                      uri="{f:uri.action(controller: 'PluginFixerController', action: 'listPluginsWithProblems')}"/>
+        </be:moduleLayout.menu>
+        <f:flashMessages/>
+        <div class="cal2calendarize-be">
+            <f:render section="header"/>
+            <f:render section="navigation" />
+            <f:render section="content"/>
+        </div>
+    </be:moduleLayout>
+</html>

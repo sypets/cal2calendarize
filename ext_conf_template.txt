@@ -1,0 +1,7 @@
+
+# todo add ifRecursiveMissing when implemented
+
+# cat=Errorhandling; type=string; label=How to treat missing storagePid problem: ignore|always (default: ignore)
+missingStorageIsError = always
+
+

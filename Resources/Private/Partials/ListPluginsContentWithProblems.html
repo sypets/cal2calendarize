@@ -1,0 +1,69 @@
+<h2>Calendarize plugins with problems</h2>
+<div class="cal2calendarize-be-content">
+
+    <f:if condition="{results}">
+        <f:then>
+            <table class="cal2calendarize-be-table">
+                <thead>
+                <tr>
+                    <th>Page</th>
+                    <th>Content Element</th>
+                    <th>Language</th>
+                    <th>Problem</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <f:for each="{results}" as="result">
+                    <tr>
+                        <td>
+                            <span title="Page">
+                                    <core:icon  identifier="apps-pagetree-page-default" />
+                                </span>
+                            <span title="{result.title}">{result.title} [{result.pid}]</span>
+                        </td>
+                        <td>
+                            <core:icon identifier="mimetypes-x-content-text" size="small" />
+
+                            <be:link.editRecord uid="{result.uid}" table="tt_content"
+                                                returnUrl="{be:moduleLink(route:'web_Cal2calendarizeCalpluginfixer', arguments:'{id:pageUid, content_uid:result.uid, action:\'listPluginsWithProblems\',extension:\'cal2calendarize\'}')}">
+                                <f:if condition="{result.content_header}">
+                                    {result.content_header} <br/>
+                                </f:if>
+                                {result.header} [{result.uid}]
+                            </be:link.editRecord>
+
+                        </td>
+
+                        <td>
+                            <f:comment>
+                                -------------------
+                                todo: get language icon
+                                -------------------
+                            </f:comment>
+                            {result.sys_language_uid}
+                        </td>
+                        <td>
+                            <f:for each="{result.errormessages}" as="msg">
+                                <p class="cal2calendarize-be-msg">{msg}</p>
+                            </f:for>
+                        </td>
+                        <td>
+                            <f:be.link title="Page layout" class="btn btn-default" route="web_layout" parameters="{id:result.pid}" >
+                                <core:icon identifier="actions-document-open" />
+                            </f:be.link>
+                            <be:link.editRecord class="btn btn-default" title="Inhaltselement editieren" uid="{result.uid}" table="tt_content"
+                                                returnUrl="{be:moduleLink(route:'web_Cal2calendarizeCalpluginfixer', arguments:'{id:pageUid, content_uid:result.uid, action:\'listPluginsWithProblems\',extension:\'cal2calendarize\'}')}">
+                                <core:icon identifier="actions-open" />
+                            </be:link.editRecord>
+                        </td>
+                    </tr>
+                </f:for>
+                </tbody>
+            </table>
+        </f:then>
+        <f:else>
+            No results found!
+        </f:else>
+    </f:if>
+</div>
