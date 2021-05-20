@@ -1,0 +1,93 @@
+p.cal2calendarize-be-msg {
+    background-color: #e8a33d;
+    margin: 1px;
+    color: white;
+    padding: 5px;
+}
+
+/*
+ * navigation: form
+ */
+
+div.cal2calendarize-be-navigation {
+
+    margin: 10px;
+    border: solid 1px darkgrey;
+    padding: 10px;
+
+    /** restrict width to width of content */
+    display: inline-block;
+}
+
+div.cal2calendarize-be-navigation form fieldset {
+    border: solid 2px lightgrey;
+    padding: 0.5em;
+    margin: 0em;
+    margin-bottom: 5px;
+
+}
+
+/*
+ * links
+ * Make links visisble as links
+ */
+.cal2calendarize-be-table a {
+    text-decoration: underline;
+
+}
+
+div.cal2calendarize-be a {
+    text-decoration: underline;
+}
+
+/*
+ * table
+ */
+
+
+.cal2calendarize-be-table {
+    table-layout: fixed
+}
+
+.cal2calendarize-be-table tr {
+    border-bottom: 1px solid darkgrey;
+}
+
+.cal2calendarize-be-table thead {
+    background-color: black;
+    color: white;
+}
+
+.cal2calendarize-be-table td,th {
+    padding: 1em;
+    vertical-align: middle;
+    word-break: break-word
+}
+
+.cal2calendarize-be-table td {
+    border-left: 1px solid darkgrey;
+}
+
+.cal2calendarize-be-table td:first-child {
+    border-left: none
+}
+
+.cal2calendarize-be-table .number {
+    padding-right: 6px;
+    text-align: center
+}
+
+
+.cal2calendarize-be-table span {
+    vertical-align: middle
+}
+
+
+.cal2calendarize-be-table td span.valid {
+    color: green
+}
+
+.cal2calendarize-be-table td span.error {
+    color: red
+}
+

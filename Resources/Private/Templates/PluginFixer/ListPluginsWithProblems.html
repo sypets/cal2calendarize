@@ -1,0 +1,20 @@
+{namespace be=TYPO3\CMS\Backend\ViewHelpers}
+{namespace core = TYPO3\CMS\Core\ViewHelpers}
+
+<f:layout name="BackendModuleLayout" />
+
+<f:section name="header">
+        <f:render partial="ListPluginsHeader" arguments="{message: message, errorMessage: errorMessage, header: 'Plugins'}"/>
+</f:section>
+
+<f:section name="navigation">
+    <f:comment>
+        <f:render partial="ListPluginsNavigation" arguments="navigation: navigation, isAdmin: isAdmin, action: listPluginsWithProblems}"/>
+    </f:comment>
+</f:section>
+
+<f:section name="content">
+    <f:render partial="ListPluginsContentWithProblems" arguments="{_all}"/>
+</f:section>
+
+<hr/>
