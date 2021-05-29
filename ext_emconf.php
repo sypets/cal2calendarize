@@ -4,7 +4,7 @@ $EM_CONF[$_EXTKEY] = [
     'title' => 'Migrate cal database content to calendarize',
     'description' => '',
     'category' => 'install',
-    'version' => '0.0.2',
+    'version' => '0.0.3',
     'state' => 'beta',
     'uploadfolder' => false,
     'createDirs' => '',
@@ -15,8 +15,7 @@ $EM_CONF[$_EXTKEY] = [
     'constraints' => [
             'depends' =>
                 [
-                    'typo3' => '10.4.0- 10.4.99',
-                    //'calendarize' => '8.1.0-8.9.99'
+                    'typo3' => '10.4.0- 10.4.99'
                 ],
             'suggests' => [],
             'conflicts' => [],

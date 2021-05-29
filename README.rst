@@ -3,7 +3,81 @@
 Calendar Plugin migration
 =========================
 
-from cal to calendarize
+Migrate plugins from cal to calendarize.
+
+!!! IMPORTANT: The cal events and category relations are already handled in
+the calendarize database wizard. This extension handles some things which are
+not handled by the wizard of calendarize, such as plugin migration.
+
+!!! WARNING: This is a first shot of migrating plugins, it greatly simplifies
+the migration and does not consider all configuration options. It is not possible
+to undo the plugin migrations. Use at your own risk. Test before using in
+production. Make backups.
+
+TIP: There is a backend module "cal2calendarize" which can be used to list
+and visualize the migrated plugins with problems. Currently, only a few
+problems are listed such as missing detailPid and missing storagePid. Look
+at the extension configuration for options.
+
+
+Usage
+=====
+
+To run console command, use for installations setup without Composer:
+
+.. code-block:: shell
+
+   php typo3/sysext/core/bin/typo3
+
+or with Composer:
+
+.. code-block:: shell
+
+   php vendor/bin/typo3
+
+
+Show help:
+
+.. code-block:: shell
+
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -h
+
+
+Dry-run: show what would be migrated:
+
+.. code-block:: shell
+
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins check
+
+Migrate all (with increased verbosity):
+
+.. code-block:: shell
+
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -vvv migrate
+
+
+Migrate all (with all actions):
+
+This will try to migrate all existing Controller action to a corresponding
+Controller action in calendarize, not just the Controller action combinations
+defined in calendarize. The result is that more action may be activated, but
+you will see a warning when editing the plugin and you should manually fix
+this an convert it to existing controller actions.
+
+This is a fast and sloppy solution, which might result in less problems directly
+after migrating, but more problems in the long run.
+
+.. code-block:: shell
+
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -v --all-actions migrate
+
+
+Migrate only one record in tt_content with uid=13221 (e.g. for testing):
+
+.. code-block:: shell
+
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins  migrate 13221
+
 
 Known problems
 ==============
@@ -15,6 +89,14 @@ Known problems
 *  not possible to fully map the views (switchableControllerActions)
 
 *  cal has more category modes, calendarize has only use categories or no categories
+
+*  not all configuration is considered and migrated
+
+*  in cal, it is possible to select a "calendar". This is ignored.
+
+*  in cal, the categories can be selected in the FlexFrom **and** in the tab
+   "Categories". For migrating, we ignore the categories set in the tab. We
+   only consider the categories selected in the flexform.
 
 Mapping
 =======
@@ -48,6 +130,8 @@ Can be in
 * flexform
 * TypoScript in flexform
 * TypoScript
+
+We currently only consider flexform.
 
 
 calendarize configuration

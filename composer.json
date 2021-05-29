@@ -1,6 +1,6 @@
 {
   "name": "sypets/cal2calendarize",
-  "description": "Migrate cal database records to calendarize",
+  "description": "Migrate cal plugins to calendarize",
   "type": "typo3-cms-extension",
   "license": [
     "GPL-2.0-or-later"
