@@ -49,7 +49,7 @@ class HelperUtility
         $objectName = \is_object($objectName) ? \get_class($objectName) : $objectName;
         /** @var PersistenceManagerInterface $manager */
         static $manager = null;
-        if (null === $manager) {
+        if ($manager == null) {
             $manager = GeneralUtility::makeInstance(ObjectManager::class)->get(PersistenceManagerInterface::class);
         }
 

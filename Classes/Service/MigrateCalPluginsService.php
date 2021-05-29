@@ -26,7 +26,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class MigrateCalPluginsService
 {
     /**
-     * @var SymfonyStyle
+     * @var SymfonyStyle|null
      */
     protected $io;
 
@@ -59,7 +59,7 @@ class MigrateCalPluginsService
 
     /**
      * @var array
-     * @deprecated ConfgiurationDefaultFlexform.xml is used
+     * @deprecated ConfigurationDefaultFlexform.xml is used
      */
     protected $defaultFlexformArray = [
         'switchableControllerActions' => 'Calendar->list;Calendar->detail',
@@ -96,8 +96,6 @@ class MigrateCalPluginsService
         'cal:yesterday' => 'yesterday',
         'cal:today' => 'today',
         'cal:tomorrow' => 'today',
-        // Sets the day of the first of the current month. This phrase is best used together with a month name following it.
-        'cal:monthstart' => 'first day of',
         'cal:weekstart' => 'this week',
         'cal:monthstart' => 'this month',
         // there is no identical mapping, we use a similar mapping
@@ -284,7 +282,7 @@ class MigrateCalPluginsService
      */
     protected function writeln(string $msg, int $verbosityLevel=OutputInterface::VERBOSITY_NORMAL): void
     {
-        if ($this->io) {
+        if ($this->io !== null) {
             $this->io->writeln($msg, $verbosityLevel);
         }
     }
@@ -521,7 +519,7 @@ class MigrateCalPluginsService
         }
     }
 
-    protected function countPlugins(): int
+    public function countPlugins(): int
     {
         $table = 'tt_content';
         $q = HelperUtility::getDatabaseConnection($table)->createQueryBuilder();
@@ -535,7 +533,8 @@ class MigrateCalPluginsService
                 $q->expr()->eq('ctype', $q->createNamedParameter('list')),
                 $q->expr()->eq('list_type', $q->createNamedParameter('cal_controller'))
             )
-            ->execute();
+            ->execute()
+            ->fetchColumn(0);
     }
 
     /**

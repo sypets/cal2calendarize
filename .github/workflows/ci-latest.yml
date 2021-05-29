@@ -25,3 +25,9 @@ jobs:
 
       - name: cgl
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s cgl -v -n
+
+      - name: Lint PHP
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s lint
+
+      - name: phpstan
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s phpstan -e "-c ../phpstan.neon"
