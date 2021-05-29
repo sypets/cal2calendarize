@@ -26,7 +26,7 @@ class FlexformUtilityService
 {
 
     /**
-     * @var SimpleXMLElement
+     * @var \SimpleXMLElement
      */
     protected $simpleXml;
 

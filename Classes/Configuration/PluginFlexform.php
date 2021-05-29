@@ -141,7 +141,7 @@ class PluginFlexform
      *
      * Can detect several problems and add several errorCodes to $result['errorCodes']
      *
-     * @param string $flexXml
+     * @param array $row
      * @param array $result
      * @return bool true, if no error in plugin
      */

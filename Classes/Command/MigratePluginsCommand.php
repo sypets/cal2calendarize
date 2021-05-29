@@ -47,7 +47,7 @@ class MigratePluginsCommand extends Command
     /**
      * Configure the command by defining the name, options and arguments
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Migration cal plugins to calendarize plugins')
             ->addArgument(
@@ -76,13 +76,13 @@ class MigratePluginsCommand extends Command
      */
     public function hasPluginsToMigrate(): bool
     {
-        $numberOfPlugins = $this->countPlugins();
+        $numberOfPlugins = $this->migrateCalPluginService->countPlugins();
         $this->io->writeln((sprintf('Number of plugins found: %d', $numberOfPlugins)));
 
         if ($numberOfPlugins > 0) {
             return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -99,10 +99,16 @@ class MigratePluginsCommand extends Command
 
         $this->io->title($this->getDescription());
 
+        if (!$this->hasPluginsToMigrate()) {
+            return 0;
+        }
+
+        // check if default XML can be loaded
         $url = ExtensionManagementUtility::extPath('cal2calendarize', 'Configuration/DefaultFlexform.xml');
         $xml = file_get_contents($url);
         if (!$xml) {
             $this->io->error('Unable to load XML ' . $url);
+            return 1;
         }
 
         $command = $input->getArgument('cmd');

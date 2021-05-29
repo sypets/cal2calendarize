@@ -1,6 +1,6 @@
 <?php
 
-namespace Sypets\Cal2calendarize\Repository;
+declare(strict_types=1);
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -15,7 +15,9 @@ namespace Sypets\Cal2calendarize\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Sypets\Cal2calendarize\Configuration\PluginFlexform;
+namespace Sypets\Cal2calendarize\Repository;
+
+use Sypets\Cal2Calendarize\Configuration\PluginFlexform;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
@@ -27,7 +29,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class PluginRepository
 {
     /**
-     * @var VisitenkarteFlexForm
+     * @var PluginFlexform
      */
     protected $pluginFlexform;
 
@@ -112,19 +114,6 @@ class PluginRepository
             if ($resultValue == false) {
                 $results[] = $result;
             }
-
-            /*
-            $result['errorCode'] = $errorcode;
-            if ($matchType == 'ge' && $errorcode >= $code) {
-                if ($errorcode >= $code) {
-                    $results[] = $result;
-                }
-            } else if ($matchType === 'equal' && $errorcode === $code) {
-                if ($errorcode == $code) {
-                    $results[] = $result;
-                }
-            }
-            */
         }
 
         $this->logger->debug('findPersonPlugins: found:' . count($results) . ' for plugins with errorcode=$code matchType=$matchType');
@@ -175,9 +164,9 @@ class PluginRepository
      */
     public function getSubPages(int $id, int $depth, int $begin, string $permsClause, bool $considerHidden = false): array
     {
-        $depth = (int)$depth;
-        $begin = (int)$begin;
-        $id = (int)$id;
+        $depth = $depth;
+        $begin = $begin;
+        $id = $id;
         $theList = [];
         if ($depth === 0) {
             $theList[] = $id;
@@ -215,34 +204,6 @@ class PluginRepository
                 );
             }
         }
-        return $theList;
-    }
-
-    public function addPageTranslationsToPageList(array $theList, string $permsClause): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
-        $queryBuilder->getRestrictions()
-            ->removeAll()
-            ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-
-        $result = $queryBuilder
-            ->select('uid', 'title', 'hidden')
-            ->from('pages')
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'l10n_parent',
-                    $queryBuilder->createNamedParameter($this->id, \PDO::PARAM_INT)
-                ),
-                QueryHelper::stripLogicalOperatorPrefix($permsClause)
-            )
-            ->execute();
-
-        while ($row = $result->fetch()) {
-            if ($row['hidden'] === 0 || $this->modTS['checkhidden']) {
-                $theList[] = (int)($row['uid']);
-            }
-        }
-
         return $theList;
     }
 }
