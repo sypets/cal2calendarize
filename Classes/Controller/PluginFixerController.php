@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Sypets\Cal2calendarize\Controller;
 
+use Sypets\Cal2calendarize\Repository\PluginRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use Sypets\Cal2calendarize\Repository\PluginRepository;
 
 class PluginFixerController extends ActionController
 {

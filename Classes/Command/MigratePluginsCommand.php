@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Sypets\Cal2calendarize\Command;
 
-use HDNET\Calendarize\Utility\HelperUtility;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -61,7 +60,10 @@ class MigratePluginsCommand extends Command
                 InputArgument::OPTIONAL,
                 'Migrate only this uid (in tt_content). If not specified, migate all'
             )
-            ->addOption('all-actions', null, InputOption::VALUE_NONE,
+            ->addOption(
+                'all-actions',
+                null,
+                InputOption::VALUE_NONE,
                 'Use all available controller actions, even if not defined in switchableControllerActions',
                 null
             );
@@ -100,7 +102,7 @@ class MigratePluginsCommand extends Command
         $url = ExtensionManagementUtility::extPath('cal2calendarize', 'Configuration/DefaultFlexform.xml');
         $xml = file_get_contents($url);
         if (!$xml) {
-            $this->io->error("Unable to load XML " . $url);
+            $this->io->error('Unable to load XML ' . $url);
         }
 
         $command = $input->getArgument('cmd');
@@ -116,9 +118,9 @@ class MigratePluginsCommand extends Command
             default:
                 $this->io->error('Must pass argument \'migrate\' or \'check\'');
                 return 1;
-        };
+        }
 
-        $migrateUid = (int) $input->getArgument('uid');
+        $migrateUid = (int)$input->getArgument('uid');
         if ($migrateUid !== 0) {
             $this->io->writeln($command . ' only this uid=' . $migrateUid);
         } else {
@@ -136,5 +138,4 @@ class MigratePluginsCommand extends Command
 
         return 0;
     }
-
 }

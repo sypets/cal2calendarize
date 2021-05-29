@@ -15,15 +15,14 @@ namespace Sypets\Cal2calendarize\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Sypets\Cal2calendarize\Configuration\PluginFlexform;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
-use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Sypets\Cal2calendarize\Configuration\PluginFlexform;
 
 class PluginRepository
 {
@@ -31,7 +30,6 @@ class PluginRepository
      * @var VisitenkarteFlexForm
      */
     protected $pluginFlexform;
-
 
     /**
      * @var array
@@ -82,16 +80,21 @@ class PluginRepository
             $constraints[] = $queryBuilder->expr()->in('p.uid', $queryBuilder->createNamedParameter($pageIds, Connection::PARAM_INT_ARRAY));
         }
 
-        $stmt = $queryBuilder->select('tt_content.uid AS uid',
+        $stmt = $queryBuilder->select(
+            'tt_content.uid AS uid',
             'tt_content.header AS header',
             'tt_content.pid AS pid',
             'tt_content.list_type AS list_type',
             'tt_content.pi_flexform AS pi_flexform',
             'tt_content.sys_language_uid AS sys_language_uid',
-            'p.title AS title')
+            'p.title AS title'
+        )
 
             ->from('tt_content')
-            ->join('tt_content', 'pages', 'p',
+            ->join(
+                'tt_content',
+                'pages',
+                'p',
                 $queryBuilder->expr()->eq('p.uid', $queryBuilder->quoteIdentifier('tt_content.pid'))
             )
             ->where(...$constraints)
@@ -99,8 +102,6 @@ class PluginRepository
             ->addOrderBy('sys_language_uid')
             ->addOrderBy('uid')
             ->execute();
-
-
 
         while ($row = $stmt->fetch()) {
             $result = [];
@@ -137,14 +138,13 @@ class PluginRepository
         return $this->findPlugins();
     }
 
-
     /**
      * Get plugin information by uid in 'tt_content'
      *
      * @param int $uid
      * @return array
      */
-    public function getByUid(int $uid) : array
+    public function getByUid(int $uid): array
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
         $row = $queryBuilder->select('uid', 'pid', 'list_type', 'pi_flexform', 'sys_language_uid')
@@ -203,7 +203,7 @@ class PluginRepository
 
         while ($row = $result->fetch()) {
             if ($begin <= 0 && ($row['hidden'] == 0 || $considerHidden)) {
-                $theList[] = (int) ($row['uid']);
+                $theList[] = (int)($row['uid']);
             }
             if ($depth > 1 && (!($row['hidden'] == 1 && $row['extendToSubpages'] == 1) || $considerHidden)) {
                 $theList[]= $this->getSubPages(
@@ -239,12 +239,10 @@ class PluginRepository
 
         while ($row = $result->fetch()) {
             if ($row['hidden'] === 0 || $this->modTS['checkhidden']) {
-                $theList[] = (int) ($row['uid']);
+                $theList[] = (int)($row['uid']);
             }
         }
 
         return $theList;
     }
-
-
 }
