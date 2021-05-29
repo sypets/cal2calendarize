@@ -60,12 +60,9 @@ In general, the usage is:
 
 .. code-block:: shell
 
-   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins [options] <command> [uid]
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins [options] [uid]
 
-The options are optional, there are 2 arguments:
-
-1. (required) command: "migrate" or "check"
-2. (optional) uid
+The options and the uid argument are optional.
 
 
 Show help:
@@ -79,27 +76,27 @@ Dry-run: show what would be migrated:
 
 .. code-block:: shell
 
-   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins check
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins --dry-run
 
 Migrate all (with increased verbosity):
 
 .. code-block:: shell
 
-   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -vvv migrate
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -vvv
 
 
 Migrate all (with `all-actions`, description see below):
 
 .. code-block:: shell
 
-   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -v --all-actions migrate
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -v --all-actions
 
 
 Migrate only one record in tt_content with uid=13221 (e.g. for testing):
 
 .. code-block:: shell
 
-   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins  migrate 13221
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins 13221
 
 Command options
 ===============

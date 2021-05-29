@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Sypets\Cal2calendarize\Service\MigrateCalPluginsService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -49,22 +50,24 @@ class MigratePluginsCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setDescription('Migration cal plugins to calendarize plugins')
-            ->addArgument(
-                'cmd',
-                InputArgument::REQUIRED,
-                'migrate or check'
-            )
+        $this->setDescription('Migrate cal plugins to calendarize plugins')
             ->addArgument(
                 'uid',
                 InputArgument::OPTIONAL,
-                'Migrate only this uid (in tt_content). If not specified, migate all'
+                'Migrate only this uid (in tt_content). If not specified, migrate all'
             )
             ->addOption(
                 'all-actions',
                 null,
                 InputOption::VALUE_NONE,
                 'Use all available controller actions, even if not defined in switchableControllerActions',
+                null
+            )
+            ->addOption(
+                '--dry-run',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not migrate, only show what would be migrated.',
                 null
             );
     }
@@ -99,6 +102,42 @@ class MigratePluginsCommand extends Command
 
         $this->io->title($this->getDescription());
 
+        // get options / arguments
+        $migrateUid = (int)$input->getArgument('uid');
+        if ($migrateUid !== 0) {
+            $this->io->writeln('Migrate only this uid=' . $migrateUid);
+        } else {
+            $this->io->writeln('Migrate all');
+        }
+        $useAllActions = $input->getOption('all-actions');
+        if ($useAllActions === true) {
+            $this->io->writeln('Use all actions');
+        } else {
+            $this->io->writeln('Use only actions defined in switchableControllerActions');
+        }
+        $dryRun = $input->getOption('dry-run');
+        if ($dryRun === true) {
+            $this->io->writeln('Use dry-run - do not migration');
+        }
+
+        // Let user confirm migration (can be suppressed with option -n)
+        if ($dryRun === false) {
+            if ($migrateUid > 0) {
+                $this->io->warning(
+                    sprintf('This will convert the existing plugin in record with uid=%d. This cannot be undone!', $migrateUid)
+                );
+            } else {
+                $this->io->warning('This will convert all existing plugins. This cannot be undone!');
+            }
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion('Start migration? (y/n)', false);
+
+            if (!$helper->ask($input, $output, $question)) {
+                return 0;
+            }
+            $this->io->writeln('In the future, you can suppress this interactive check with the -n option');
+        }
+
         if (!$this->hasPluginsToMigrate()) {
             return 0;
         }
@@ -109,35 +148,6 @@ class MigratePluginsCommand extends Command
         if (!$xml) {
             $this->io->error('Unable to load XML ' . $url);
             return 1;
-        }
-
-        $command = $input->getArgument('cmd');
-        switch ($command) {
-            case 'migrate':
-                $dryRun = false;
-                break;
-
-            case 'check':
-                $dryRun = true;
-                break;
-
-            default:
-                $this->io->error('Must pass argument \'migrate\' or \'check\'');
-                return 1;
-        }
-
-        $migrateUid = (int)$input->getArgument('uid');
-        if ($migrateUid !== 0) {
-            $this->io->writeln($command . ' only this uid=' . $migrateUid);
-        } else {
-            $this->io->writeln($command . ' all');
-        }
-
-        $useAllActions = $input->getOption('all-actions');
-        if ($useAllActions === true) {
-            $this->io->writeln('Use all actions');
-        } else {
-            $this->io->writeln('Use only actions defined in switchableControllerActions');
         }
 
         $this->migrateCalPluginService->migratePlugins($migrateUid, $useAllActions, $dryRun);
