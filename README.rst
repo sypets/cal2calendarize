@@ -110,7 +110,7 @@ This will try to migrate all existing Controller action to a corresponding
 Controller action in calendarize, not just the Controller action combinations
 defined in calendarize. The result is that more action may be activated, but
 you will see a warning when editing the plugin and you should manually fix
-this an convert it to existing controller actions.
+this and convert it to existing controller actions.
 This is a fast and sloppy solution, which might result in less problems directly
 after migrating, but more problems in the long run.
 
@@ -133,11 +133,17 @@ We do not use full name of the configuration settings here.
 | TS constants: pidList   | flex: persistence.storagePid         | constant not used |
 +-------------------------+--------------------------------------+-------------------+
 | flex: eventViewPid      | flex: detailPid                      | 100%              |
++-------------------------+--------------------------------------+-------------------+
 | flex: listViewPid       | flex: listPid                        | 100%              |
++-------------------------+--------------------------------------+-------------------+
 | flex: listViewPid       | flex: listPid                        | 100%              |
++-------------------------+--------------------------------------+-------------------+
 | flex: yearViewPid       | flex: yearPid                        | 100%              |
++-------------------------+--------------------------------------+-------------------+
 | flex: monthViewPid      | flex: monthPid                       | 100%              |
++-------------------------+--------------------------------------+-------------------+
 | flex: weekViewPid       | flex: weekPid                        | 100%              |
++-------------------------+--------------------------------------+-------------------+
 | flex: dayViewPid        | flex: dayPid                         | 100%              |
 +-------------------------+--------------------------------------+-------------------+
 | flex:usePageBrowser     | flex: hidePagination                 | flex yes, TS no   |
@@ -154,15 +160,15 @@ Mapping of allowedViews
 -----------------------
 
 In cal, it is possible to combine any of the allowed views. In calendarize, we
-have a defined set of switchable controller actions.
-
-We try to map as best as possible, see source code. See also option
-`--all-actions`.
+have a defined set of switchable controller actions (for example "list", "detail",
+"list+detail", but **not** "month+detail").
 
 We get exact matches for `list`, `detail` and `list+detail`. For the year, month,
 etc. there is no combined view with detail. It is recommended to create a
 separate page for the detail view.
 
+We try to map as best as possible, see source code. See also option
+`--all-actions`.
 
 Mapping of category modes
 -------------------------
@@ -183,7 +189,7 @@ We cannot exactly map this to calendarize: In calendarize, there is only one
 category mode.
 
 Fairly well mapped can be modes 0 and 3. For the other modes, we use the mode
-that fits the best - eiher we use the existing categories or we don't.
+that fits best - either we use the existing categories or we don't.
 
 
 +-------------------------+--------------------------------------+-------------------+
