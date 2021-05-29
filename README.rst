@@ -6,7 +6,7 @@ Calendar Plugin migration
 Migrate plugins from cal to calendarize.
 
 !!! IMPORTANT: The cal events and category relations are already handled in
-the calendarize database wizard. This extension handles some things which are
+the calendarize upgrade wizard. This extension handles some things which are
 not handled by the wizard of calendarize, such as plugin migration.
 
 !!! WARNING: This is a first shot of migrating plugins, it greatly simplifies
@@ -15,9 +15,28 @@ to undo the plugin migrations. Use at your own risk. Test before using in
 production. Make backups.
 
 TIP: There is a backend module "cal2calendarize" which can be used to list
-and visualize the migrated plugins with problems. Currently, only a few
-problems are listed such as missing detailPid and missing storagePid. Look
-at the extension configuration for options.
+and visualize the migrated plugins with problems AFTER the migration.
+Currently, only a few problems are listed such as missing detailPid and
+missing storagePid. Look at the extension configuration for options.
+
+
+Known problems
+==============
+
+*  Only flexform (and tt_content.pages and recursive) is considered, not the
+   TypoScript in the flexform and TypoScript.
+
+*  not possible to fully map the views (switchableControllerActions)
+
+*  cal has more category modes, calendarize has only use categories or no categories
+
+*  not all configuration is considered and migrated
+
+*  in cal, it is possible to select a "calendar". This is ignored.
+
+*  in cal, the categories can be selected in the FlexFrom **and** in the tab
+   "Categories". For migrating, we ignore the categories set in the tab. We
+   only consider the categories selected in the flexform.
 
 
 Usage
@@ -34,6 +53,19 @@ or with Composer:
 .. code-block:: shell
 
    php vendor/bin/typo3
+
+
+In general, the usage is:
+
+
+.. code-block:: shell
+
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins [options] <command> [uid]
+
+The options are optional, there are 2 arguments:
+
+1. (required) command: "migrate" or "check"
+2. (optional) uid
 
 
 Show help:
@@ -56,16 +88,7 @@ Migrate all (with increased verbosity):
    php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -vvv migrate
 
 
-Migrate all (with all actions):
-
-This will try to migrate all existing Controller action to a corresponding
-Controller action in calendarize, not just the Controller action combinations
-defined in calendarize. The result is that more action may be activated, but
-you will see a warning when editing the plugin and you should manually fix
-this an convert it to existing controller actions.
-
-This is a fast and sloppy solution, which might result in less problems directly
-after migrating, but more problems in the long run.
+Migrate all (with `all-actions`, description see below):
 
 .. code-block:: shell
 
@@ -78,25 +101,18 @@ Migrate only one record in tt_content with uid=13221 (e.g. for testing):
 
    php vendor/bin/typo3 cal2calendarize:migrateCalPlugins  migrate 13221
 
+Command options
+===============
 
-Known problems
-==============
+`--all-actions`:
 
-* Only flexform (and tt_content.pages and recursive) is read and written, not TypoScript
-
-   *  e.g. number of entries per page is not set. (Only configurable in TypoScript in calendarize)
-
-*  not possible to fully map the views (switchableControllerActions)
-
-*  cal has more category modes, calendarize has only use categories or no categories
-
-*  not all configuration is considered and migrated
-
-*  in cal, it is possible to select a "calendar". This is ignored.
-
-*  in cal, the categories can be selected in the FlexFrom **and** in the tab
-   "Categories". For migrating, we ignore the categories set in the tab. We
-   only consider the categories selected in the flexform.
+This will try to migrate all existing Controller action to a corresponding
+Controller action in calendarize, not just the Controller action combinations
+defined in calendarize. The result is that more action may be activated, but
+you will see a warning when editing the plugin and you should manually fix
+this an convert it to existing controller actions.
+This is a fast and sloppy solution, which might result in less problems directly
+after migrating, but more problems in the long run.
 
 Mapping
 =======
@@ -106,20 +122,124 @@ We do not use full name of the configuration settings here.
 * TS: TypoScript
 * flex: Flexform
 
-+ ------------------------+--------------------------------------+-------------------|
++-------------------------+--------------------------------------+-------------------+
 | cal                     | calendarize                          | Mapping           |
-+=========================+======================================+-------------------+
-| flex: allowedViews      | flex: switchableControllerActions    | incomplete        |
-+ ------------------------+--------------------------------------+-------------------+
-| tt_content.pages        | flex: persistence.storagePid         | 100%              |
++=========================+======================================+===================+
+| flex: allowedViews      | flex: switchableControllerActions    | incomplete, see   |
+|                         |                                      | below             |
++-------------------------+--------------------------------------+-------------------+
+| tt_content.pages        | flex: persistence.storagePid         | 100%,             |
++-------------------------+--------------------------------------+-------------------+
 | TS constants: pidList   | flex: persistence.storagePid         | constant not used |
-+ ------------------------+--------------------------------------+-------------------+
-| pids, e.g.              |                                      | 100%              |
-| flex: eventViewPid      | flex: detailPid                      |                   |
-| ...                     | ...                                  |                   |
-+ ------------------------+--------------------------------------+-------------------+
++-------------------------+--------------------------------------+-------------------+
+| flex: eventViewPid      | flex: detailPid                      | 100%              |
+| flex: listViewPid       | flex: listPid                        | 100%              |
+| flex: listViewPid       | flex: listPid                        | 100%              |
+| flex: yearViewPid       | flex: yearPid                        | 100%              |
+| flex: monthViewPid      | flex: monthPid                       | 100%              |
+| flex: weekViewPid       | flex: weekPid                        | 100%              |
+| flex: dayViewPid        | flex: dayPid                         | 100%              |
++-------------------------+--------------------------------------+-------------------+
 | flex:usePageBrowser     | flex: hidePagination                 | flex yes, TS no   |
-+ ------------------------+--------------------------------------+-------------------+
++-------------------------+--------------------------------------+-------------------+
+| flex:categoryMode       | no category mode                     | incomplete, see   |
+|                         |                                      | below             |
++-------------------------+--------------------------------------+-------------------+
+| flex:categorySelection  | insert categories into               | 100%              |
+|                         | sys_category_record_mm               |                   |
++-------------------------+--------------------------------------+-------------------+
+
+
+Mapping of allowedViews
+-----------------------
+
+In cal, it is possible to combine any of the allowed views. In calendarize, we
+have a defined set of switchable controller actions.
+
+We try to map as best as possible, see source code. See also option
+`--all-actions`.
+
+We get exact matches for `list`, `detail` and `list+detail`. For the year, month,
+etc. there is no combined view with detail. It is recommended to create a
+separate page for the detail view.
+
+
+Mapping of category modes
+-------------------------
+
+In cal, there are several category modes:
+
+*  Category mode=0 (show all)
+*  Category mode=1 (exact): exact match
+*  Category mode=2 (none): show all events which DON't contain one of the selected categories
+*  Category mode=3 (any): show all events with at least ONE of the selected categories
+*  Category mode=4 (minimum): show only events which contain (at least) all the
+   selected categories in the plugin.
+
+
+https://docs.typo3.org/typo3cms/extensions/cal/stable/_sources/ConfigureThePlugin/FiltersTab/Index.rst.txt
+
+We cannot exactly map this to calendarize: In calendarize, there is only one
+category mode.
+
+Fairly well mapped can be modes 0 and 3. For the other modes, we use the mode
+that fits the best - eiher we use the existing categories or we don't.
+
+
++-------------------------+--------------------------------------+-------------------+
+| cal                     | calendarize                          | Mapping           |
++=========================+======================================+===================+
+| mode=0                  | do not use categories                | 100%              |
++-------------------------+--------------------------------------+-------------------+
+| mode=1                  | same as 3                            | no exact mapping  |
++-------------------------+--------------------------------------+-------------------+
+| mode=2                  | same as 0                            | very wrong        |
++-------------------------+--------------------------------------+-------------------+
+| mode=3                  | just use the categories              | 100%              |
++-------------------------+--------------------------------------+-------------------+
+| mode=4                  | same as 3                            | no exact mapping  |
++-------------------------+--------------------------------------+-------------------+
+
+Mapping of categories
+---------------------
+
+The categories in cal can be defined in the flexform and in the tab "categories".
+We only consider the flexform. But already existing category relations will remain.
+
+The behaviour of the categories may be quite different from the behaviour in cal
+because of the (incomplete) mapping of the categoryModes and these 2 ways of
+setting categories in cal.
+
+Mapping of starttime / endtime
+------------------------------
+
+Starttime
+
+*  cal: flexform: view.list.starttime
+*  cal: TypoScript: plugin.tx_cal_controller.view.list.event.starttime
+*  calendarize:
+
+   *  useRelativeDate=1: settings.overrideStartRelative
+   *  useRelativeDate=0: settings.overrideStartdate
+
+This can be defined in cal in 3 places: in Flexform `view.list.starttime`
+in tab "TypoScript" in the Flexform or in TypoScript.
+Endtime
+
+*  cal: flexform: view.list.endtime
+*  cal: TypoScript: plugin.tx_cal_controller.view.list.event.endtime
+*  calendarize:
+
+   *  useRelativeDate=1: settings.overrideEndRelative
+   *  useRelativeDate=0: settings.overrideEnddate
+
+
+cal:
+
+.. code-block:: typoscript
+
+   view.list.starttime=2011-04-01
+   settings.overrideStartdate = 00:00 1-4-2011
 
 
 cal configuration
