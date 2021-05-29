@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,9 +18,9 @@ declare(strict_types=1);
 namespace Sypets\Cal2calendarize\Service;
 
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FlexformUtilityService
 {
@@ -28,7 +29,6 @@ class FlexformUtilityService
      * @var SimpleXMLElement
      */
     protected $simpleXml;
-
 
     /** @var FlexformUtilityService */
     protected $flexFormService;
@@ -85,7 +85,6 @@ class FlexformUtilityService
         return false;
     }
 
-
     public function getXml()
     {
         return $this->simpleXml->asXML();
@@ -109,5 +108,4 @@ class FlexformUtilityService
     {
         return $this->flexFormService->convertFlexFormContentToArray($flexformXml);
     }
-
 }

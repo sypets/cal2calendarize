@@ -19,5 +19,4 @@ if (!defined('TYPO3_MODE')) {
             'labels' => 'LLL:EXT:cal2calendarize/Resources/Private/Language/locallang_cal2calendarize.xlf',
         ]
     );
-
 })();

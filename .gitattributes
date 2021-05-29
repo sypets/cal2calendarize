@@ -1,0 +1,9 @@
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.github export-ignore
+/.gitignore export-ignore
+/composer.lock export-ignore
+/Build export-ignore
+/phpstan.neon export-ignore
+/Resources/Private/TypeScript/ export-ignore
+/Tests/ export-ignore

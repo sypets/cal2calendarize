@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,9 +17,9 @@ declare(strict_types=1);
 
 namespace Sypets\Cal2calendarize\Service;
 
-use Sypets\Cal2calendarize\Utility\HelperUtility;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Sypets\Cal2calendarize\Utility\HelperUtility;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -44,7 +45,6 @@ class MigrateCalPluginsService
      */
     protected $flexFormService;
 
-
     /**
      * @var array
      */
@@ -56,7 +56,6 @@ class MigrateCalPluginsService
      * @deprecated
      */
     protected $newFlexformArray;
-
 
     /**
      * @var array
@@ -84,7 +83,6 @@ class MigrateCalPluginsService
             'recursive' => ''
         ]
     ];
-
 
     /**
      * Relative dates see https://www.php.net/manual/en/datetime.formats.relative.php
@@ -181,9 +179,7 @@ class MigrateCalPluginsService
         ],
     ];
 
-    /*
-     * Map cal allowedViews to calendarize switchableControllerActions
-     */
+    // Map cal allowedViews to calendarize switchableControllerActions
     protected $flexformAllowedViewsCombinedMapping = [
         'list' => 'Calendar->list',
         'event' => 'Calendar->detail',
@@ -265,18 +261,19 @@ class MigrateCalPluginsService
         $plugins = $this->getPluginRows('cal_controller', $migrateUid);
 
         foreach ($plugins as $row) {
-            $uid = (int) $row['uid'];
+            $uid = (int)$row['uid'];
 
             $this->writeln(sprintf('old flexform as XML=%s', $row['pi_flexform']), OutputInterface::VERBOSITY_VERY_VERBOSE);
             $this->oldFlexFormArray = $this->flexFormService->convertFlexFormContentToArray($row['pi_flexform']);
-            $this->writeln(sprintf('old flexform as array =>json=%s',
-                \json_encode($this->oldFlexFormArray)), OutputInterface::VERBOSITY_VERY_VERBOSE);
+            $this->writeln(sprintf(
+                'old flexform as array =>json=%s',
+                \json_encode($this->oldFlexFormArray)
+            ), OutputInterface::VERBOSITY_VERY_VERBOSE);
 
             $this->migrateFields($uid, $row);
 
             $this->migrateCategories($uid);
         }
-
     }
 
     /**
@@ -292,14 +289,13 @@ class MigrateCalPluginsService
         }
     }
 
-
     protected function migrateFields(int $uid, array $row)
     {
         $table = 'tt_content';
 
         $changedFields = $this->getChangedValues($row);
         foreach ($changedFields as $key => $value) {
-            $this->io->writeln(sprintf('uid=%d UPDATE field %s: %s', $uid,$key, $value), OutputInterface::VERBOSITY_VERY_VERBOSE);
+            $this->io->writeln(sprintf('uid=%d UPDATE field %s: %s', $uid, $key, $value), OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
 
         if ($this->dryRun === false) {
@@ -312,12 +308,11 @@ class MigrateCalPluginsService
                 ['uid' => $uid]
             );
         }
-
     }
 
     protected function migrateCategories(int $uid)
     {
-        $categoryMode = (int) $this->oldFlexFormArray['categoryMode'];
+        $categoryMode = (int)$this->oldFlexFormArray['categoryMode'];
         $categorySelection = $this->oldFlexFormArray['categorySelection'];
 
         $this->io->writeln(sprintf('Category mode=%d', $categoryMode));
@@ -350,7 +345,6 @@ class MigrateCalPluginsService
 
         // set categories in plugin
         $this->insertCategoryRelations($uid, explode(',', $categorySelection));
-
     }
 
     /**
@@ -359,7 +353,7 @@ class MigrateCalPluginsService
      */
     protected function getChangedValues(array $row): array
     {
-        $uid = (int) $row['uid'];
+        $uid = (int)$row['uid'];
         $this->io->writeln('');
         $this->io->writeln(sprintf('uid=%d, pid=%d', $uid, (int)$row['pid']));
 
@@ -383,8 +377,11 @@ class MigrateCalPluginsService
         $allowedViews = $this->oldFlexFormArray['allowedViews'] ?? '';
         $switchableControllerAction = $this->getSwitchableControllerAction($allowedViews);
         $this->flexFormService->setFlexformValue('main', 'switchableControllerActions', $switchableControllerAction);
-        $this->io->writeln(sprintf('Migrate setting: allowedViews=%s => switchableControllerAction=%s',
-            $allowedViews, $switchableControllerAction));
+        $this->io->writeln(sprintf(
+            'Migrate setting: allowedViews=%s => switchableControllerAction=%s',
+            $allowedViews,
+            $switchableControllerAction
+        ));
 
         foreach ($this->flexFormSettingsMapping as $oldKey => $new) {
             $oldValue = $this->oldFlexFormArray[$oldKey] ?? $new['default'];
@@ -397,11 +394,20 @@ class MigrateCalPluginsService
 
             $result = $this->flexFormService->setFlexformValue($new['sheet'], $new['field'], $newValue);
             if (!$result) {
-                $this->io->warning(sprintf('Error writing setting oldKey=%s error=%s',
-                    $oldKey, $this->flexFormService->getErrorMsg()));
+                $this->io->warning(sprintf(
+                    'Error writing setting oldKey=%s error=%s',
+                    $oldKey,
+                    $this->flexFormService->getErrorMsg()
+                ));
             }
-            $this->io->writeln(sprintf('Migrate setting: %s=%s => %s.%s=%s',
-                $oldKey, $oldValue, $new['sheet'], $new['field'], $newValue));
+            $this->io->writeln(sprintf(
+                'Migrate setting: %s=%s => %s.%s=%s',
+                $oldKey,
+                $oldValue,
+                $new['sheet'],
+                $new['field'],
+                $newValue
+            ));
         }
 
         $xml = $this->flexFormService->getXml();
@@ -414,7 +420,6 @@ class MigrateCalPluginsService
             'recursive' => 0,
             'pi_flexform' => $xml,
         ];
-
     }
 
     /**
@@ -446,7 +451,7 @@ class MigrateCalPluginsService
 
         // get max sorting
         $q = $c->createQueryBuilder();
-        $sorting = (int) $q->select('sorting')
+        $sorting = (int)$q->select('sorting')
             ->from($table)
             ->where(
                 $q->expr()->eq('tablenames', $q->createNamedParameter('tt_content')),
@@ -461,7 +466,7 @@ class MigrateCalPluginsService
 
         // get max sorting_foreign
         $q = $c->createQueryBuilder();
-        $sortingForeign = (int) $q->select('sorting_foreign')
+        $sortingForeign = (int)$q->select('sorting_foreign')
             ->from($table)
             ->where(
                 $q->expr()->eq('tablenames', $q->createNamedParameter('tt_content')),
@@ -474,11 +479,10 @@ class MigrateCalPluginsService
             ->fetchColumn(0);
         $this->io->writeln(sprintf('uid=%d MAX(sorting_foreign)=%d', $uid, $sortingForeign));
 
-
         foreach ($categorySelection as $key => $cat) {
-            $cat = (int) $cat;
+            $cat = (int)$cat;
             $q = $c->createQueryBuilder();
-            $count = (int) $q->count('*')
+            $count = (int)$q->count('*')
                 ->from($table)
                 ->where(
                     $q->expr()->eq('tablenames', $q->createNamedParameter('tt_content')),
@@ -505,7 +509,7 @@ class MigrateCalPluginsService
             ];
 
             // insert category
-            $this->io->writeln(sprintf('INSERT plugin <-> category relation: %s',  \json_encode($values)));
+            $this->io->writeln(sprintf('INSERT plugin <-> category relation: %s', \json_encode($values)));
 
             if ($this->dryRun === false) {
                 $q->insert($table)
@@ -525,7 +529,7 @@ class MigrateCalPluginsService
             ->removeAll()
             ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
 
-        return (int) $q->count('uid')
+        return (int)$q->count('uid')
             ->from($table)
             ->where(
                 $q->expr()->eq('ctype', $q->createNamedParameter('list')),
@@ -578,5 +582,4 @@ class MigrateCalPluginsService
             ->execute()
             ->fetch();
     }
-
 }

@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -17,8 +18,8 @@ declare(strict_types = 1);
 namespace Sypets\Cal2Calendarize\Configuration;
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -27,7 +28,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PluginFlexform
 {
-    protected CONST EXT_NAME = 'cal2calendarize';
+    protected const EXT_NAME = 'cal2calendarize';
 
     public const ERROR_UNKNOWN_ERROR = 1;
 
@@ -38,7 +39,6 @@ class PluginFlexform
 
     public const ERROR_NO_STORAGE_PID = 10;
     public const ERROR_NO_DETAIL_PID_AND_NO_DETAIL_ACTION = 11;
-
 
     /**
      * @var FlexFormService
@@ -70,9 +70,8 @@ class PluginFlexform
      */
     public function getErrorMessage(int $errorCode): string
     {
-
         if ($errorCode > 1 && $errorCode <= 9) {
-            return "Missing or invalid flexform";
+            return 'Missing or invalid flexform';
         }
 
         switch ($errorCode) {
@@ -88,7 +87,6 @@ class PluginFlexform
                 break;
         }
         return $errormessage;
-
     }
 
     /**
@@ -99,7 +97,7 @@ class PluginFlexform
      *
      * @todo use class instead of $errorCode
      */
-    public function isXmlArrayValid(array $values, int $uid, int &$errorCode) : bool
+    public function isXmlArrayValid(array $values, int $uid, int &$errorCode): bool
     {
         if (!$values || !is_array($values)) {
             $errorCode = self::ERROR_EMPTY_FLEXFORM;
@@ -109,11 +107,11 @@ class PluginFlexform
         return true;
     }
 
-    public function isValidValues(array $values, array &$errorCodes) : bool
+    public function isValidValues(array $values, array &$errorCodes): bool
     {
         $storagePid = $values['storagePid'] ?? '';
         $switchableControllerActions = $values['switchableControllerActions'];
-        $detailPid = (int) $values['detailPid'];
+        $detailPid = (int)$values['detailPid'];
 
         // check if missing storagePid
         if ($storagePid === '') {
@@ -149,7 +147,7 @@ class PluginFlexform
      */
     public function getResultsFromFlexForm(array $row, array &$result): bool
     {
-        $uid = (int) ($row['uid']);
+        $uid = (int)($row['uid']);
         $result = [
             'uid' => $uid,
             'header' => $row['header'],
@@ -192,9 +190,9 @@ class PluginFlexform
     {
         $result['storagePid'] = trim($xmlArray['persistence']['storagePid'] ?? '');
         $result['switchableControllerActions'] = $this->parseSwitchableControllerActions($xmlArray['switchableControllerActions'] ?? '');
-        $result['useRelativeDate'] = (bool) ($xmlArray['settings']['useRelativeDate'] ?? false);
+        $result['useRelativeDate'] = (bool)($xmlArray['settings']['useRelativeDate'] ?? false);
         $result['overrideEndRelative'] = $xmlArray['settings']['overrideEndRelative'] ?? '';
-        $result['detailPid'] = (int) ($xmlArray['settings']['detailPid'] ?? 0);
+        $result['detailPid'] = (int)($xmlArray['settings']['detailPid'] ?? 0);
     }
 
     /**
@@ -209,8 +207,7 @@ class PluginFlexform
      */
     protected function parseSwitchableControllerActions(string $value): array
     {
-        /**@var $parts
-         */
+        // @var $parts
         $parts = GeneralUtility::trimExplode(';', $value, true);
         $parts = array_map(function ($element) {
             $split = explode('->', $element);
@@ -220,5 +217,4 @@ class PluginFlexform
 
         return $parts;
     }
-
 }

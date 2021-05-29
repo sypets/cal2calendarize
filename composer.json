@@ -1,27 +1,46 @@
 {
-  "name": "sypets/cal2calendarize",
-  "description": "Migrate cal plugins to calendarize",
-  "type": "typo3-cms-extension",
-  "license": [
-    "GPL-2.0-or-later"
-  ],
-  "authors": [
-    {
-      "name": "Sybille Peters",
-      "email": "sypets@gmx.de"
-    }
-  ],
-  "require": {
-    "typo3/cms-core": "^9.5.0 || ^10.4.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Sypets\\Cal2calendarize\\": "Classes"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Sypets\\Cal2calendarize\\Tests\\": "Tests"
-    }
-  }
+	"name": "sypets/cal2calendarize",
+	"description": "Migrate cal plugins to calendarize",
+	"type": "typo3-cms-extension",
+	"license": [
+		"GPL-2.0-or-later"
+	],
+	"authors": [
+	{
+		"name": "Sybille Peters",
+		"email": "sypets@gmx.de"
+	}
+	],
+	"config": {
+		"sort-packages": true,
+		"vendor-dir": ".Build/vendor",
+		"bin-dir": ".Build/bin"
+	},
+	"require": {
+		"typo3/cms-core": "^9.5.0 || ^10.4.0"
+	},
+	"require-dev": {
+		"friendsofphp/php-cs-fixer": "^2.18.6"
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "cal2calendarize",
+			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"web-dir": ".Build/Web"
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"Sypets\\Cal2calendarize\\": "Classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Sypets\\Cal2calendarize\\Tests\\": "Tests"
+		}
+	},
+	"scripts": {
+		"ci:php:cs-fixer-check": ["php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v --dry-run --diff --diff-format udiff --path-mode intersection --config=Build/.php-cs-fixer.php ."],
+		"ci:php:cs-fixer-fix": ["php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v --path-mode intersection --config=Build/.php-cs-fixer.php ."]
+	}
 }
