@@ -117,7 +117,13 @@ class MigratePluginsCommand extends Command
         }
         $dryRun = $input->getOption('dry-run');
         if ($dryRun === true) {
-            $this->io->writeln('Use dry-run - do not migration');
+            $this->io->writeln('Use dry-run - do not migrate');
+        }
+        $noInteraction = $input->getOption('no-interaction');
+        if ($noInteraction) {
+            $this->io->writeln('Do not ask for confirmation');
+        } else {
+            $this->io->writeln('Ask for confirmation - can be suppressed with -n');
         }
 
         // Let user confirm migration (can be suppressed with option -n)
@@ -129,13 +135,15 @@ class MigratePluginsCommand extends Command
             } else {
                 $this->io->warning('This will convert all existing plugins. This cannot be undone!');
             }
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('Start migration? (y/n)', false);
+            if (!$noInteraction) {
+                $helper = $this->getHelper('question');
+                $question = new ConfirmationQuestion('Start migration? (y/n)', false);
 
-            if (!$helper->ask($input, $output, $question)) {
-                return 0;
+                if (!$helper->ask($input, $output, $question)) {
+                    return 0;
+                }
+                $this->io->writeln('In the future, you can suppress this interactive check with the -n option');
             }
-            $this->io->writeln('In the future, you can suppress this interactive check with the -n option');
         }
 
         if (!$this->hasPluginsToMigrate()) {
