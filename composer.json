@@ -17,8 +17,8 @@
 		"bin-dir": ".Build/bin"
 	},
 	"require": {
-		"typo3/cms-core": "^9.5.0 || ^10.4.0",
-		"typo3/cms-extbase": "^9.5.0 || ^10.4.0"
+		"typo3/cms-core": "^9.5.30 || ^10.4.20",
+		"typo3/cms-extbase": "^9.5.30 || ^10.4.20"
 	},
 	"require-dev": {
 		"friendsofphp/php-cs-fixer": "^2.18.6",
