@@ -84,12 +84,18 @@ Migrate all (with increased verbosity):
 
    php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -vvv
 
-
-Migrate all (with `all-actions`, description see below):
+Suppress the confirmation (do not ask for confirmation):
 
 .. code-block:: shell
 
-   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -v --all-actions
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -n
+
+
+Migrate all, verbose, without confirmation (with `all-actions`, description see below):
+
+.. code-block:: shell
+
+   php vendor/bin/typo3 cal2calendarize:migrateCalPlugins -v -n --all-actions
 
 
 Migrate only one record in tt_content with uid=13221 (e.g. for testing):
