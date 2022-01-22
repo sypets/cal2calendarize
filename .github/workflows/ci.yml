@@ -1,7 +1,11 @@
 # Configuration for running GitHub actions
+#  based on EXT:enetcache: .github/workflows/tests.yml
+#    https://github.com/lolli42/enetcache/blob/master/.github/workflows/tests.yml
 #  see https://docs.github.com/en/actions/guides/setting-up-continuous-integration-using-workflow-templates
+#
+# latest changes based on https://github.com/sypets/brofix
 
-name: CI (latest)
+name: CI
 
 on:
   push:
@@ -11,7 +15,8 @@ on:
 
 jobs:
 
-  cgl:
+  all_core_10:
+    name: "all core-10"
     runs-on: ubuntu-20.04
     strategy:
       matrix:
