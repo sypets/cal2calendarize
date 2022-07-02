@@ -2,7 +2,7 @@
 # use phpstan-prophecy in case prophecy is used in unit or functional tests
 
 includes:
-  - .Build/vendor/jangregor/phpstan-prophecy/extension.neon
+  #- .Build/vendor/jangregor/phpstan-prophecy/extension.neon
 
 parameters:
   tmpDir: %currentWorkingDirectory%/var/cache/phpstan
